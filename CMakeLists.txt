@@ -74,15 +74,24 @@ endif()
 find_package(Eigen3 3.1.0 REQUIRED)
 find_package(Pangolin REQUIRED)
 
-set(PYTHON_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} /usr/local/lib/python2.7/dist-packages/numpy/core/include/numpy)
+if (DEFINED $ENV{VIRTUAL_ENV})
+    set(PYTHON_INCLUDE_DIRS
+        ${PYTHON_INCLUDE_DIRS}
+        $ENV{VIRTUAL_ENV}/include
+        $ENV{VIRTUAL_ENV}/lib/python2.7/site-packages/numpy/core/include)
+else()
+    set(PYTHON_INCLUDE_DIRS
+        ${PYTHON_INCLUDE_DIRS}
+        /usr/include/python2.7/
+        /usr/local/lib/python2.7/dist-packages/numpy/core/include/numpy)
+endif()
 
 include_directories(
 ${PROJECT_SOURCE_DIR}
 ${PROJECT_SOURCE_DIR}/include
 ${EIGEN3_INCLUDE_DIR}
 ${Pangolin_INCLUDE_DIRS}
-/usr/include/python2.7/
-/usr/lib/python2.7/dist-packages/numpy/core/include/numpy/
+${PYTHON_INCLUDE_DIRS}
 ${Boost_INCLUDE_DIRS}
 )
 message("PROJECT_SOURCE_DIR: " ${PROJECT_SOURCE_DIR})
