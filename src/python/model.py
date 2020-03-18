@@ -312,7 +312,7 @@ class ProposalLayer(KE.Layer):
 
 def log2_graph(x):
     """Implementatin of Log2. TF doesn't have a native implemenation."""
-    return tf.log(x) / tf.log(2.0)
+    return tf.math.log(x) / tf.math.log(2.0)
 
 
 class PyramidROIAlign(KE.Layer):
@@ -743,7 +743,7 @@ class DetectionLayer(KE.Layer):
             return np.reshape(detections_batch, [self.config.BATCH_SIZE, self.config.DETECTION_MAX_INSTANCES, 6])
 
         # Return wrapped function
-        return tf.py_func(wrapper, inputs, tf.float32)
+        return tf.compat.v1.py_func(wrapper, inputs, tf.float32)
 
     def compute_output_shape(self, input_shape):
         return (None, self.config.DETECTION_MAX_INSTANCES, 6)
@@ -1890,7 +1890,7 @@ class MaskRCNN():
         exlude: list of layer names to excluce
         """
         import h5py
-        from keras.engine import topology
+        from keras.engine import saving
 
         if exclude:
             by_name = True
@@ -1912,9 +1912,9 @@ class MaskRCNN():
             layers = filter(lambda l: l.name not in exclude, layers)
         
         if by_name:
-            topology.load_weights_from_hdf5_group_by_name(f, layers)
+            saving.load_weights_from_hdf5_group_by_name(f, layers)
         else:
-            topology.load_weights_from_hdf5_group(f, layers)
+            saving.load_weights_from_hdf5_group(f, layers)
         if hasattr(f, 'close'):
             f.close()
 
