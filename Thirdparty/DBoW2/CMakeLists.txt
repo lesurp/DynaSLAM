@@ -24,6 +24,8 @@ set(SRCS_DUTILS
   DUtils/Random.cpp
   DUtils/Timestamp.cpp)
 
+#set(CUDA_USE_STATIC_CUDA_RUNTIME OFF)
+#find_package(OpenCV 2.4.3 REQUIRED)
 find_package(OpenCV 3.0 QUIET)
 if(NOT OpenCV_FOUND)
    find_package(OpenCV 2.4.3 QUIET)

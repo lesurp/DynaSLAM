@@ -1,5 +1,7 @@
 echo "Configuring and building Thirdparty/DBoW2 ..."
 
+set -e
+
 if [ -z "$1" ]; then 
     DYNASLAM_BUILD_TYPE=Release
 else
@@ -34,4 +36,4 @@ echo "Configuring and building DynaSLAM ..."
 mkdir build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=${DYNASLAM_BUILD_TYPE}
-make -j
+make
