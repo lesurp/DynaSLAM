@@ -61,5 +61,9 @@ RUN ln -s /usr/local/cuda/lib64/libcudart.so    /usr/lib/libopencv_dep_cudart.so
 COPY . /DynaSLAM
 WORKDIR /DynaSLAM
 
-RUN rm -r build Thirdparty/g2o/build Thirdparty/DBoW2/build && \
+ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/DynaSLAM/TensorRT-6.0.1.5/lib"
+
+RUN tar xf TensorRT-6.0.1.5.Ubuntu-16.04.x86_64-gnu.cuda-10.1.cudnn7.6.tar.gz && \
+    rm -r build Thirdparty/g2o/build Thirdparty/DBoW2/build TensorRT-6.0.1.5.Ubuntu-16.04.x86_64-gnu.cuda-10.1.cudnn7.6.tar.gz && \
+    pip install TensorRT-6.0.1.5/python/tensorrt-6.0.1.5-cp27-none-linux_x86_64.whl TensorRT-6.0.1.5/uff/uff-0.6.5-py2.py3-none-any.whl TensorRT-6.0.1.5/graphsurgeon/graphsurgeon-0.4.1-py2.py3-none-any.whl && \
     ./build.sh RelWithDebInfo
