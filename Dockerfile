@@ -15,6 +15,7 @@ RUN git clone https://github.com/stevenlovegrove/Pangolin.git /Pangolin && \
     make install -j16 && \
     rm /Pangolin -r
 
+############### THIS DOESN'T SEEM NECESSARY ACTUALLY
 ## opencv **2**
 RUN git clone --depth 1 https://github.com/lesurp/opencv -b support_cuda_10 /opencv && \
     mkdir /opencv/build && \
