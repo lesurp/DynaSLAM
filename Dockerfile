@@ -1,4 +1,4 @@
-FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu16.04
+FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
 
 ## apt
 ENV DEBIAN_FRONTEND=noninteractive
@@ -62,6 +62,7 @@ COPY . /DynaSLAM
 WORKDIR /DynaSLAM
 
 ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/DynaSLAM/TensorRT-6.0.1.5/lib"
+ENV DTSETS=/data
 
 RUN tar xf TensorRT-6.0.1.5.Ubuntu-16.04.x86_64-gnu.cuda-10.1.cudnn7.6.tar.gz && \
     rm -r build Thirdparty/g2o/build Thirdparty/DBoW2/build TensorRT-6.0.1.5.Ubuntu-16.04.x86_64-gnu.cuda-10.1.cudnn7.6.tar.gz && \
