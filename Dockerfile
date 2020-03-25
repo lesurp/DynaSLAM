@@ -23,16 +23,6 @@ RUN git clone --depth 1 https://github.com/lesurp/opencv -b support_cuda_10 /ope
     make -j16 && \
     make install -j16
 
-## dynaslam pip deps
-RUN pip install --upgrade pip &&\
-    pip install cython && \
-    pip install numpy && \
-    pip install tensorflow && \
-    pip install tensorflow-gpu && \
-    pip install keras && \
-    pip install scikit-image && \
-    pip install pycocotools
-
 RUN ln -s /usr/local/cuda/lib64/libcudart.so    /usr/lib/libopencv_dep_cudart.so && \
     ln -s /usr/local/cuda/lib64/libnppial.so    /usr/local/lib/libopencv_dep_nppial.so && \
     ln -s /usr/local/cuda/lib64/libnppicc.so    /usr/local/lib/libopencv_dep_nppicc.so && \
@@ -45,26 +35,17 @@ RUN ln -s /usr/local/cuda/lib64/libcudart.so    /usr/lib/libopencv_dep_cudart.so
     ln -s /usr/local/cuda/lib64/libnppisu.so    /usr/local/lib/libopencv_dep_nppisu.so && \
     ln -s /usr/local/cuda/lib64/libnppitc.so    /usr/local/lib/libopencv_dep_nppitc.so
 
-#RUN ln -s /usr/local/cuda/lib64/libcudart.so /usr/local/lib && \
-#    ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/libnppial.so /usr/local/lib/libopencv_dep_nppial.so && \
-#    ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/libnppicc.so /usr/local/lib/libopencv_dep_nppicc.so && \
-#    ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/libnppicom.so /usr/local/lib/libopencv_dep_nppicom.so && \
-#    ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/libnppidei.so /usr/local/lib/libopencv_dep_nppidei.so && \
-#    ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/libnppif.so /usr/local/lib/libopencv_dep_nppif.so && \
-#    ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/libnppig.so /usr/local/lib/libopencv_dep_nppig.so && \
-#    ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/libnppim.so /usr/local/lib/libopencv_dep_nppim.so && \
-#    ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/libnppist.so /usr/local/lib/libopencv_dep_nppist.so && \
-#    ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/libnppisu.so /usr/local/lib/libopencv_dep_nppisu.so && \
-#    ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/libnppitc.so /usr/local/lib/libopencv_dep_nppitc.so
-
-
 COPY . /DynaSLAM
 WORKDIR /DynaSLAM
 
 ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/DynaSLAM/TensorRT-6.0.1.5/lib"
 ENV DTSETS=/data
 
-RUN tar xf TensorRT-6.0.1.5.Ubuntu-16.04.x86_64-gnu.cuda-10.1.cudnn7.6.tar.gz && \
+## Note: pip sucks so we have to install all packages manually
+## https://github.com/pypa/pip/issues/2083
+RUN pip install --upgrade pip &&\
+    grep -v "^#" requirements.txt | xargs -I{} pip install {} && \
+    tar xf TensorRT-6.0.1.5.Ubuntu-16.04.x86_64-gnu.cuda-10.1.cudnn7.6.tar.gz && \
     rm -r build Thirdparty/g2o/build Thirdparty/DBoW2/build TensorRT-6.0.1.5.Ubuntu-16.04.x86_64-gnu.cuda-10.1.cudnn7.6.tar.gz && \
     pip install TensorRT-6.0.1.5/python/tensorrt-6.0.1.5-cp27-none-linux_x86_64.whl TensorRT-6.0.1.5/uff/uff-0.6.5-py2.py3-none-any.whl TensorRT-6.0.1.5/graphsurgeon/graphsurgeon-0.4.1-py2.py3-none-any.whl && \
     ./build.sh RelWithDebInfo
